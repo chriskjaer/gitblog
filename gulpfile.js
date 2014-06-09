@@ -6,11 +6,13 @@ var gulp        = require('gulp'),
     watch       = require('gulp-watch'),
     kss         = require('gulp-kss'),
     browserSync = require('browser-sync'),
-    prefix      = require('gulp-autoprefixer');
+    prefix      = require('gulp-autoprefixer'),
+    source      = require('vinyl-source-stream'),
+    watchify    = require('watchify');
 
 var DIR = {
-  STYLES: 'assets/styles',
-  SCRIPTS: 'assets/scripts'
+  STYLES: './assets/styles',
+  SCRIPTS: './assets/scripts'
 };
 
 //
@@ -18,14 +20,38 @@ var DIR = {
 // -------------------------------------------------------------
 
 gulp.task('css', function() {
-  watch({glob: DIR.STYLES + '/**/*.scss'}, function(files) {
-    return files.pipe(sass({
-        errLogToConsole: true
-      }))
-      .pipe(prefix("last 1 version", "> 1%", "ie 10"))
-      .pipe(gulp.dest(DIR.STYLES))
-      .pipe(browserSync.reload({stream: true}));
+  return watch({glob: DIR.STYLES + '/**/*.scss'})
+    .pipe(sass({
+      errLogToConsole: true
+    }))
+    .pipe(prefix("last 1 version", "> 1%", "ie 10"))
+    .pipe(gulp.dest(DIR.STYLES))
+    .pipe(browserSync.reload({stream: true}));
+});
+
+gulp.task('browser-sync', ['watchify'], function() {  
+  browserSync.init(null, {
+    server: {
+      baseDir: './'
+    }
   });
+});
+
+gulp.task('watchify', function() {
+  var bundler = watchify(DIR.SCRIPTS + '/index.js');
+
+  // bundler.transform('brfs')
+
+  bundler.on('update', rebundle);
+
+  function rebundle () {
+    return bundler.bundle()
+      .pipe(source('bundle.js'))
+      .pipe(gulp.dest(DIR.SCRIPTS))
+      .pipe(browserSync.reload({stream:true, once: true}));
+  }
+
+  return rebundle();
 });
 
 // gulp.task('clean', function(){
@@ -45,23 +71,7 @@ gulp.task('css', function() {
 //     .pipe(gulp.dest('source/styleguide/'));
 // });
 //
-gulp.task('browser-sync', ['build'], function() {  
-  browserSync.init(null, {
-    server: {
-      baseDir: './'
-    }
-  });
-});
-
-// --- Bringing it all together in a build task ---
-gulp.task('build', ['css']);
-
-// --- Let gulp keep an eye on our files and compile stuff if it changes ---
-gulp.task('watch', ['browser-sync'], function () {
+gulp.task('default', ['css', 'browser-sync'], function(){
   gulp.watch(DIR.STYLES + '/**/*.scss', ['css']);
-});
-
-// --- Default gulp task, run with gulp. - Starts our project and opens a new browser window.
-gulp.task('default',  function(){
-  gulp.start('watch');
+  gulp.watch(DIR.SCRIPTS + '/**/*.js', ['watchify']);
 });
