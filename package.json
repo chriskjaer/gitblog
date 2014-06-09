@@ -17,6 +17,7 @@
     "gulp-kss": "0.0.2",
     "gulp-sass": "^0.7.2",
     "gulp-uglify": "^0.3.0",
-    "gulp-watch": "^0.6.5"
+    "gulp-watch": "^0.6.5",
+    "watchify": "^0.10.2"
   }
 }
