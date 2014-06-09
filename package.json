@@ -1,0 +1,22 @@
+{
+  "name": "gitblog",
+  "version": "0.0.0",
+  "description": "Simple blog based on a git repo",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Kjær Sørensen",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^0.9.1",
+    "gulp": "^3.7.0",
+    "gulp-autoprefixer": "0.0.7",
+    "gulp-clean": "^0.3.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-kss": "0.0.2",
+    "gulp-sass": "^0.7.2",
+    "gulp-uglify": "^0.3.0",
+    "gulp-watch": "^0.6.5"
+  }
+}
