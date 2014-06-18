@@ -40,7 +40,7 @@ gulp.task('browser-sync', ['watchify'], function() {
 gulp.task('watchify', function() {
   var bundler = watchify(DIR.SCRIPTS + '/index.js');
 
-  // bundler.transform('brfs')
+  bundler.transform('reactify');
 
   bundler.on('update', rebundle);
 
@@ -54,24 +54,7 @@ gulp.task('watchify', function() {
   return rebundle();
 });
 
-// gulp.task('clean', function(){
-//   return gulp.src([
-//       settings.styleguide
-//     ], {read: false})
-//     .pipe(clean({force: true}));
-// });
-
-// gulp.task('kss', function() {
-//   gulp.src([settings.source + 'stylesheets/**/*.scss'])
-//     .pipe(kss({
-//       overview: 'README.md',
-//       templateDirectory: settings.styleguideTemplate
-//     }))
-//     .pipe(gulp.dest(settings.styleguide))
-//     .pipe(gulp.dest('source/styleguide/'));
-// });
-//
 gulp.task('default', ['css', 'browser-sync'], function(){
   gulp.watch(DIR.STYLES + '/**/*.scss', ['css']);
-  gulp.watch(DIR.SCRIPTS + '/**/*.js', ['watchify']);
+  gulp.watch(DIR.SCRIPTS + '**/*.js', ['watchify']);
 });
